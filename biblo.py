@@ -13,7 +13,7 @@ import requests
 import dateparser
 import logging
 
-#os.chdir(r'C:\Users\userpv\Documents\GitHub\Biblo')
+os.chdir(r'C:\Users\NgWei\OneDrive\Documents\GitHub\Biblo')
 # Import pandas
 import pandas as pd
 
@@ -116,8 +116,15 @@ class reference:
         article.download()
         article.parse()
         self.title = article.title
-        self.author = getauthor(self,article.authors[0])
-        self.date = getdate(article.publish_date,True)
+        try:
+            self.author = getauthor(self,article.authors[0])
+        except:
+            self.author = ''
+        try:
+            self.date = getdate(article.publish_date,True)
+        except:
+            self.date = ''
+            
         
 
 
@@ -139,12 +146,10 @@ def main():
     BibloList = []
     for i in range(0,int(df1.shape[0])):
         print(i)
-        Result = Biblo(
-                df1.get_value(i,'Webpage'),
-                df1.get_value(i,'Author'),
-                df1.get_value(i,'Date')
+        ref = reference(
+                df1.get_value(i,'Webpage')
                 )
-        BibloList.append(Result)
+        BibloList.append(ref.getsource())
     Txtfile = open("Output.txt",'w')
     Txtfile.truncate()
     for item in BibloList:
